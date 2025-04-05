@@ -12,69 +12,90 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Portfolio Layout',
       home: Scaffold(
-        appBar: AppBar(title: const Text('First Portfolio Exam')),
-        body: Column(
-          children: [
-            // Orange box (fixed height, border)
-            Container(
-              height: 80,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                color: Colors.orange,
-                border: Border.all(color: Colors.black),
-              ),
-              alignment: Alignment.center,
-              child: const Text(
-                'Orange Box',
-                style: TextStyle(fontSize: 20, color: Colors.white),
-              ),
-            ),
+        appBar: AppBar(
+          title: const Text('First Portfolio Exam'),
+          backgroundColor: Colors.blue,
+        ),
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              const SizedBox(height: 20),
 
-            // Middle area (flexible height)
-            Expanded(
-              child: Column(
+              // "Welcome" box
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 40,
+                  vertical: 15,
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.orange,
+                  border: Border.all(color: Colors.black, width: 3),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: const Text(
+                  'Welcome',
+                  style: TextStyle(fontSize: 24, color: Colors.white),
+                ),
+              ),
+
+              const SizedBox(height: 40),
+
+              // Row with three boxes
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  // First grey box (fixed size)
+                  // Black box (TAMK)
                   Container(
                     height: 100,
-                    width: double.infinity,
-                    color: Colors.grey,
+                    width: 80,
+                    color: Colors.black,
                     alignment: Alignment.center,
-                    child: const Text('Grey Box 1'),
+                    child: const Text(
+                      'TAMK',
+                      style: TextStyle(color: Colors.white, fontSize: 16),
+                    ),
                   ),
 
-                  // Spacer to make the space between grey boxes flexible
-                  const Spacer(),
+                  // Dark grey box (Flutter!) rotated vertically
+                  Container(
+                    height: 120,
+                    width: 60,
+                    color: const Color.fromARGB(255, 96, 96, 96),
+                    alignment: Alignment.center,
+                    child: const RotatedBox(
+                      quarterTurns: 3,
+                      child: Text(
+                        'Flutter!',
+                        style: TextStyle(color: Colors.white, fontSize: 18),
+                      ),
+                    ),
+                  ),
 
-                  // Second grey box (fixed size)
+                  // Light grey box (THWS)
                   Container(
                     height: 100,
-                    width: double.infinity,
-                    color: Colors.grey,
+                    width: 80,
+                    color: const Color.fromARGB(255, 129, 129, 129),
                     alignment: Alignment.center,
-                    child: const Text('Grey Box 2'),
+                    child: const Text(
+                      'THWS',
+                      style: TextStyle(color: Colors.black, fontSize: 16),
+                    ),
                   ),
                 ],
               ),
-            ),
 
-            // Blue box (fixed height, border) with logo
-            Container(
-              height: 120,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                color: Colors.blue,
-                border: Border.all(color: Colors.black),
+              const SizedBox(height: 40),
+
+              // THWS logo at the bottom
+              SizedBox(
+                height: 200,
+                child: Image.asset('assets/thws_logo.png', fit: BoxFit.contain),
               ),
-              // Replace with your own logo asset
-              child: Center(
-                child: Image(
-                  image: AssetImage('assets/thws_logo.png'),
-                  fit: BoxFit.contain,
-                ),
-              ),
-            ),
-          ],
+
+              const SizedBox(height: 40),
+            ],
+          ),
         ),
       ),
     );
