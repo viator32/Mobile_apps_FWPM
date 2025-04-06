@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
       home: Scaffold(
         appBar: AppBar(
           title: const Text('First Portfolio Exam'),
-          backgroundColor: Colors.blue,
+          backgroundColor: Colors.blue[900],
         ),
         body: SingleChildScrollView(
           child: Column(
@@ -34,7 +34,7 @@ class MyApp extends StatelessWidget {
                 ),
                 child: const Text(
                   'Welcome',
-                  style: TextStyle(fontSize: 24, color: Colors.white),
+                  style: TextStyle(fontSize: 40, color: Colors.white),
                 ),
               ),
 
@@ -48,26 +48,26 @@ class MyApp extends StatelessWidget {
                   Container(
                     height: 100,
                     width: 80,
-                    color: Colors.black,
+                    color: Colors.grey[850],
                     alignment: Alignment.center,
-                    child: const Text(
-                      'TAMK',
-                      style: TextStyle(color: Colors.white, fontSize: 16),
+                    child: Container(
+                      alignment: Alignment.bottomRight,
+                      child: Text(
+                        'TAMK',
+                        style: TextStyle(color: Colors.white, fontSize: 16),
+                      ),
                     ),
                   ),
 
                   // Dark grey box (Flutter!) rotated vertically
                   Container(
-                    height: 120,
-                    width: 60,
-                    color: const Color.fromARGB(255, 96, 96, 96),
+                    height: 140,
+                    width: 80,
+                    color: Colors.grey[700],
                     alignment: Alignment.center,
-                    child: const RotatedBox(
-                      quarterTurns: 3,
-                      child: Text(
-                        'Flutter!',
-                        style: TextStyle(color: Colors.white, fontSize: 18),
-                      ),
+                    child: Text(
+                      'Flutter!',
+                      style: TextStyle(color: Colors.white, fontSize: 18),
                     ),
                   ),
 
@@ -75,11 +75,14 @@ class MyApp extends StatelessWidget {
                   Container(
                     height: 100,
                     width: 80,
-                    color: const Color.fromARGB(255, 129, 129, 129),
+                    color: Colors.grey[500],
                     alignment: Alignment.center,
-                    child: const Text(
-                      'THWS',
-                      style: TextStyle(color: Colors.black, fontSize: 16),
+                    child: Container(
+                      alignment: Alignment.bottomLeft,
+                      child: Text(
+                        'THWS',
+                        style: TextStyle(color: Colors.white, fontSize: 16),
+                      ),
                     ),
                   ),
                 ],
@@ -90,7 +93,17 @@ class MyApp extends StatelessWidget {
               // THWS logo at the bottom
               SizedBox(
                 height: 200,
-                child: Image.asset('assets/thws_logo.png', fit: BoxFit.contain),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.blue[900],
+                    border: Border.all(color: Colors.black, width: 1),
+                  ),
+
+                  child: Image.asset(
+                    'assets/thws_logo.png',
+                    fit: BoxFit.contain,
+                  ),
+                ),
               ),
 
               const SizedBox(height: 40),
