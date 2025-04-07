@@ -13,14 +13,19 @@ class MyApp extends StatelessWidget {
       title: 'Portfolio Layout',
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('First Portfolio Exam'),
+          title: Center(
+            child: const Text(
+              'First Portfolio Exam',
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
           backgroundColor: Colors.blue[900],
+          leading: IconButton(onPressed: () {}, icon: Icon(Icons.home)),
         ),
         body: SingleChildScrollView(
           child: Column(
             children: [
-              const SizedBox(height: 20),
-
+              const SizedBox(height: 60),
               // "Welcome" box
               Container(
                 padding: const EdgeInsets.symmetric(
@@ -47,7 +52,7 @@ class MyApp extends StatelessWidget {
                   // Black box (TAMK)
                   Container(
                     height: 100,
-                    width: 80,
+                    width: 100,
                     color: Colors.grey[850],
                     alignment: Alignment.center,
                     child: Container(
@@ -61,8 +66,8 @@ class MyApp extends StatelessWidget {
 
                   // Dark grey box (Flutter!) rotated vertically
                   Container(
-                    height: 140,
-                    width: 80,
+                    height: 250,
+                    width: 100,
                     color: Colors.grey[700],
                     alignment: Alignment.center,
                     child: Text(
@@ -74,7 +79,7 @@ class MyApp extends StatelessWidget {
                   // Light grey box (THWS)
                   Container(
                     height: 100,
-                    width: 80,
+                    width: 100,
                     color: Colors.grey[500],
                     alignment: Alignment.center,
                     child: Container(
@@ -88,7 +93,7 @@ class MyApp extends StatelessWidget {
                 ],
               ),
 
-              const SizedBox(height: 40),
+              const SizedBox(height: 100),
 
               // THWS logo at the bottom
               SizedBox(
