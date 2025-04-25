@@ -1,6 +1,6 @@
-// lib/features/trips/presentation/trips_page.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import '../../../shared/widgets/adaptive_fab.dart';
 import '../data/trip_repository.dart';
 import 'trip_card.dart';
@@ -19,12 +19,13 @@ class TripsPage extends ConsumerWidget {
         itemBuilder: (_, i) => TripCard(trip: trips[i]),
       ),
       floatingActionButton: AdaptiveFab(
-        onPressed: () => Navigator.pushNamed(context, '/new'),
+        // OLD: Navigator.pushNamed(context, '/new')
+        onPressed: () => context.push('/new'),
       ),
       bottomNavigationBar: NavigationBar(
         selectedIndex: 0,
         onDestinationSelected: (i) {
-          if (i == 1) Navigator.pushNamed(context, '/settings');
+          if (i == 1) context.go('/settings');
         },
         destinations: const [
           NavigationDestination(icon: Icon(Icons.card_travel), label: 'Trips'),
