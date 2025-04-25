@@ -1,4 +1,3 @@
-// lib/shared/widgets/adaptive_fab.dart
 import 'package:flutter/material.dart';
 
 class AdaptiveFab extends StatelessWidget {

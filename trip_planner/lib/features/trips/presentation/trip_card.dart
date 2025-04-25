@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart'; // 👈 add
+import '../../luggage/presentation/luggage_page.dart';
 import '../domain/trip.dart';
 
 class TripCard extends StatelessWidget {
@@ -22,8 +22,12 @@ class TripCard extends StatelessWidget {
                   .toList(),
         ),
         trailing: const Icon(Icons.chevron_right),
-        // OLD: Navigator.pushNamed(context, '/luggage/${trip.id}')
-        onTap: () => context.push('/luggage/${trip.id}'), // ✅
+
+        onTap:
+            () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => LuggagePage(tripId: trip.id)),
+            ),
       ),
     );
   }
