@@ -1,0 +1,100 @@
+{
+    "recipes": [
+      {
+        "name": "Spaghetti Carbonara",
+        "category": "italian",
+        "ingredients": ["spaghetti", "guanciale", "eggs", "pecorino cheese", "black pepper"]
+      },
+      {
+        "name": "Margherita Pizza",
+        "category": "italian",
+        "ingredients": ["pizza dough", "tomato sauce", "mozzarella cheese", "fresh basil", "olive oil"]
+      },
+      {
+        "name": "Lasagna",
+        "category": "italian",
+        "ingredients": ["lasagna noodles", "ricotta cheese", "mozzarella cheese", "ground beef", "tomato sauce", "parmesan cheese"]
+      },
+      {
+        "name": "Chicken Tikka Masala",
+        "category": "indian",
+        "ingredients": ["chicken breast", "yogurt", "onions", "tomato puree", "garlic", "ginger", "garam masala", "cumin", "coriander"]
+      },
+      {
+        "name": "Rogan Josh",
+        "category": "indian",
+        "ingredients": ["lamb", "yogurt", "garlic", "ginger", "tomatoes", "garam masala", "paprika", "cinnamon", "cardamom"]
+      },
+      {
+        "name": "Palak Paneer",
+        "category": "indian",
+        "ingredients": ["spinach", "paneer cheese", "onion", "garlic", "ginger", "garam masala", "cumin", "turmeric"]
+      },
+      {
+        "name": "Baklava",
+        "category": "turkish",
+        "ingredients": ["phyllo dough", "chopped nuts", "butter", "sugar", "lemon juice", "water", "honey"]
+      },
+      {
+        "name": "İskender Kebap",
+        "category": "turkish",
+        "ingredients": ["beef or lamb", "butter", "tomato sauce", "yogurt", "pita bread", "tomatoes", "green peppers"]
+      },
+      {
+        "name": "Menemen",
+        "category": "turkish",
+        "ingredients": ["eggs", "tomatoes", "green peppers", "onions", "olive oil", "salt", "black pepper"]
+      },
+      {
+        "name": "Risotto",
+        "category": "italian",
+        "ingredients": ["arborio rice", "chicken broth", "white wine", "onions", "parmesan cheese", "butter", "salt", "pepper"]
+      },
+      {
+        "name": "Tiramisu",
+        "category": "italian",
+        "ingredients": ["ladyfingers", "mascarpone cheese", "espresso", "sugar", "cocoa powder", "egg yolks", "rum or brandy"]
+      },
+      {
+        "name": "Butter Chicken",
+        "category": "indian",
+        "ingredients": ["chicken thighs", "butter", "cream", "tomato puree", "garlic", "ginger", "garam masala", "cumin", "coriander"]
+      },
+      {
+        "name": "Biryani",
+        "category": "indian",
+        "ingredients": ["basmati rice", "chicken or lamb", "yogurt", "onions", "tomatoes", "garam masala", "saffron", "milk"]
+      },
+      {
+        "name": "Karniyarik",
+        "category": "turkish",
+        "ingredients": ["eggplants", "ground beef", "onions", "tomatoes", "parsley", "green bell peppers", "tomato paste"]
+      },
+      {
+        "name": "Lahmacun",
+        "category": "turkish",
+        "ingredients": ["ground lamb or beef", "pita dough", "tomatoes", "onions", "paprika", "parsley", "lemon juice"]
+      },
+      {
+        "name": "Samosa",
+        "category": "indian",
+        "ingredients": ["potatoes", "peas", "cumin seeds", "garam masala", "dough", "oil for frying"]
+      },
+      {
+        "name": "Chana Masala",
+        "category": "indian",
+        "ingredients": ["chickpeas", "onions", "tomatoes", "garlic", "ginger", "garam masala", "cumin", "coriander"]
+      },
+      {
+        "name": "Tavuk Şiş",
+        "category": "turkish",
+        "ingredients": ["chicken breast", "yogurt", "garlic", "paprika", "red pepper flakes", "olive oil"]
+      },
+      {
+        "name": "Panna Cotta",
+        "category": "italian",
+        "ingredients": ["cream", "milk", "sugar", "gelatin", "vanilla extract"]
+      }
+    ]
+  }
+  
