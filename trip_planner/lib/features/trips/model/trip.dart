@@ -10,14 +10,13 @@ class Trip {
     required this.start,
     this.end,
     this.hasReturn = false,
-    List<String>? tags,
+    this.tags = const [],
     this.notes = '',
     this.ticketUrl,
     this.photoUrl,
     this.returnTripId,
     String? id,
-  }) : tags = tags ?? const [],
-       id = id ?? _uuid.v4();
+  }) : id = id ?? _uuid.v4();
 
   final String id;
   final String title;
@@ -30,5 +29,5 @@ class Trip {
   final String notes;
   final String? ticketUrl;
   final String? photoUrl;
-  final String? returnTripId; // links to auto-created back-trip
+  final String? returnTripId;
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import '../domain/trip.dart';
-import 'trip_details_page.dart'; // make sure this import path is correct
+import '../model/trip.dart';
+import 'trip_details_page.dart';
 
 class TripCard extends StatelessWidget {
   const TripCard({required this.trip, super.key});

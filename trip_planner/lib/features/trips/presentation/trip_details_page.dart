@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../../luggage/presentation/baggage_page.dart';
+import '../../baggage/presentation/baggage_page.dart';
 import '../data/trip_repository.dart';
 
 class TripDetailsPage extends ConsumerWidget {

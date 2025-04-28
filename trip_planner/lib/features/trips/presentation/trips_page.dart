@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../shared/widgets/adaptive_fab.dart';
 import '../data/trip_repository.dart';
-import '../domain/trip.dart';
+import '../model/trip.dart';
 import 'trip_card.dart';
 import 'new_trip_page.dart';
 

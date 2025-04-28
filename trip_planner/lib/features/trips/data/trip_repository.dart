@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../domain/trip.dart';
+import '../model/trip.dart';
 
 class TripRepository extends StateNotifier<List<Trip>> {
   TripRepository() : super(const []);

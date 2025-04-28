@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:http/http.dart' as http;
 import '../data/trip_repository.dart';
-import '../domain/trip.dart';
+import '../model/trip.dart';
 
 class NewTripPage extends ConsumerStatefulWidget {
   const NewTripPage({super.key});
