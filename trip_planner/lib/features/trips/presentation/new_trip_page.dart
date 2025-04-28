@@ -24,31 +24,35 @@ class _NewTripPageState extends ConsumerState<NewTripPage> {
   bool _hasReturn = false;
   DateTime? _start, _end;
 
+  /* ---------- TAGS ---------- */
+  static const _defaultTags = [
+    'Vacation',
+    'Business',
+    'Work',
+    'Conference',
+    'Family',
+    'Weekend',
+  ];
+  final _selectedTags = <String>{};
+
+  /* ---------- CITY AUTOCOMPLETE ---------- */
   Future<List<String>> _fetchCities(String pattern) async {
     if (pattern.length < 2) return const [];
-
     final uri = Uri.parse(
       'https://geocoding-api.open-meteo.com/v1/search?name=$pattern&count=10&language=en',
     );
-
     try {
       final res = await http.get(uri);
       if (res.statusCode != 200) return const [];
-
       final json = jsonDecode(res.body) as Map<String, dynamic>;
       final results = (json['results'] ?? []) as List<dynamic>;
-
-      // deduplicate and return city names
-      return results
-          .map((e) => e['name'] as String)
-          .toSet()
-          .toList(growable: false);
+      return results.map((e) => e['name'] as String).toSet().toList();
     } catch (_) {
-      // network or parsing error → just return empty list
       return const [];
     }
   }
 
+  /* ---------- DATE PICKER ---------- */
   Future<void> _pickDate({required bool isStart}) async {
     final now = DateTime.now();
     final picked = await showDatePicker(
@@ -62,6 +66,7 @@ class _NewTripPageState extends ConsumerState<NewTripPage> {
     }
   }
 
+  /* ---------- SAVE ---------- */
   void _save() {
     if (_formKey.currentState!.validate() && _start != null) {
       final trip = Trip(
@@ -71,6 +76,7 @@ class _NewTripPageState extends ConsumerState<NewTripPage> {
         start: _start!,
         end: _hasReturn ? _end : null,
         hasReturn: _hasReturn,
+        tags: _selectedTags.toList(),
         notes: _notesCtrl.text,
       );
       ref.read(tripRepoProvider.notifier).addWithReturn(trip);
@@ -87,22 +93,20 @@ class _NewTripPageState extends ConsumerState<NewTripPage> {
     super.dispose();
   }
 
+  /* ---------- CITY FIELD BUILDER ---------- */
   Widget _cityField({
     required TextEditingController controller,
     required String label,
   }) {
     final node = FocusNode();
-
     return TypeAheadField<String>(
       controller: controller,
       focusNode: node,
-
       suggestionsCallback: _fetchCities,
       itemBuilder: (_, s) => ListTile(title: Text(s)),
-
       onSelected: (s) => controller.text = s,
       builder:
-          (context, _ignored, focusNode) => TextFormField(
+          (context, _, focusNode) => TextFormField(
             controller: controller,
             focusNode: focusNode,
             decoration: InputDecoration(
@@ -114,6 +118,7 @@ class _NewTripPageState extends ConsumerState<NewTripPage> {
     );
   }
 
+  /* ---------- BUILD ---------- */
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -124,7 +129,7 @@ class _NewTripPageState extends ConsumerState<NewTripPage> {
           key: _formKey,
           child: ListView(
             children: [
-              // title
+              // name
               TextFormField(
                 controller: _titleCtrl,
                 decoration: const InputDecoration(
@@ -176,7 +181,29 @@ class _NewTripPageState extends ConsumerState<NewTripPage> {
                 value: _hasReturn,
                 onChanged: (v) => setState(() => _hasReturn = v),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 12),
+
+              // ---------- TAG PICKER ----------
+              const Text('Tags'),
+              const SizedBox(height: 4),
+              Wrap(
+                spacing: 4,
+                children:
+                    _defaultTags.map((tag) {
+                      final selected = _selectedTags.contains(tag);
+                      return FilterChip(
+                        label: Text(tag),
+                        selected: selected,
+                        onSelected:
+                            (_) => setState(() {
+                              selected
+                                  ? _selectedTags.remove(tag)
+                                  : _selectedTags.add(tag);
+                            }),
+                      );
+                    }).toList(),
+              ),
+              const SizedBox(height: 16),
 
               // notes
               TextFormField(
