@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../domain/baggage_item.dart';
+import '../model/baggage_item.dart';
 
 class BaggageRepository extends StateNotifier<Map<String, List<BaggageItem>>> {
   BaggageRepository() : super({});

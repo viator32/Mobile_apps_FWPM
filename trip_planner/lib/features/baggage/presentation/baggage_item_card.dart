@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../data/baggage_repository.dart';
-import '../domain/baggage_item.dart';
+import '../model/baggage_item.dart';
 
 class BaggageItemCard extends ConsumerWidget {
   const BaggageItemCard({
