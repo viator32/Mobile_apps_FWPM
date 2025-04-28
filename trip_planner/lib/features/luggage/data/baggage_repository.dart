@@ -24,6 +24,14 @@ class BaggageRepository extends StateNotifier<Map<String, List<BaggageItem>>> {
     final list = forTrip(tripId)..removeAt(index);
     state = {...state, tripId: list};
   }
+
+  void reorder(String tripId, int oldIndex, int newIndex) {
+    final list = [...forTrip(tripId)];
+    if (newIndex > oldIndex) newIndex -= 1;
+    final item = list.removeAt(oldIndex);
+    list.insert(newIndex, item);
+    state = {...state, tripId: list};
+  }
 }
 
 final baggageRepoProvider =
