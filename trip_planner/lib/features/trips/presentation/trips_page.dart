@@ -55,7 +55,7 @@ class _TripsPageState extends ConsumerState<TripsPage> {
       appBar: AppBar(
         title: Image.asset(
           'assets/logo.png',
-          height: 32,
+          height: 170,
           errorBuilder: (_, __, ___) => const Text('Trips'),
         ),
       ),
