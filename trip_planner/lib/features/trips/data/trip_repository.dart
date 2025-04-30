@@ -83,6 +83,15 @@ class TripRepository extends StateNotifier<List<Trip>> {
 
     state = [...state, forwardLinked, back];
   }
+
+  /// Flip the `pinned` status of a trip.
+  void togglePin(String id) {
+    state =
+        state.map((t) {
+          if (t.id != id) return t;
+          return t.copyWith(pinned: !t.pinned);
+        }).toList();
+  }
 }
 
 final tripRepoProvider = StateNotifierProvider<TripRepository, List<Trip>>(

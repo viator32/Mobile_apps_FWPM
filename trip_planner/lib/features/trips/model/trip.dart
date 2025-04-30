@@ -16,6 +16,7 @@ class Trip {
     this.photoUrl,
     this.returnTripId,
     this.attachmentPaths = const [],
+    this.pinned = false, // <<< new field
     String? id,
   }) : id = id ?? _uuid.v4();
 
@@ -31,9 +32,8 @@ class Trip {
   final String? ticketUrl;
   final String? photoUrl;
   final String? returnTripId;
-
-  /// Paths or names of user-selected files
   final List<String> attachmentPaths;
+  final bool pinned;
 
   Trip copyWith({
     String? title,
@@ -48,6 +48,7 @@ class Trip {
     String? photoUrl,
     String? returnTripId,
     List<String>? attachmentPaths,
+    bool? pinned,
     String? id,
   }) {
     return Trip(
@@ -63,6 +64,7 @@ class Trip {
       photoUrl: photoUrl ?? this.photoUrl,
       returnTripId: returnTripId ?? this.returnTripId,
       attachmentPaths: attachmentPaths ?? List.from(this.attachmentPaths),
+      pinned: pinned ?? this.pinned,
       id: id ?? this.id,
     );
   }

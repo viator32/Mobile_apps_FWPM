@@ -6,22 +6,17 @@ import '../model/trip.dart';
 import 'trip_card.dart';
 import 'new_trip_page.dart';
 
-/// Holds the current search query (Riverpod makes rebuild easy)
 final tripSearchProvider = StateProvider<String>((_) => '');
-
-/// Currently selected tag filter; null means “all”.
 final tagFilterProvider = StateProvider<String?>((_) => null);
 
 class TripsPage extends ConsumerStatefulWidget {
   const TripsPage({super.key});
-
   @override
   ConsumerState<TripsPage> createState() => _TripsPageState();
 }
 
 class _TripsPageState extends ConsumerState<TripsPage> {
   final _searchCtrl = TextEditingController();
-
   @override
   void dispose() {
     _searchCtrl.dispose();
@@ -34,43 +29,41 @@ class _TripsPageState extends ConsumerState<TripsPage> {
     final query = ref.watch(tripSearchProvider);
     final tag = ref.watch(tagFilterProvider);
 
-    // ---------- build list of tags for filter bar ----------
+    // Build tag list
     final allTags =
-        <String>{for (final t in allTrips) ...t.tags}.toList()..sort();
+        <String>{for (var t in allTrips) ...t.tags}.toList()..sort();
 
-    // ---------- apply filters ----------
-    List<Trip> visible =
+    // Filter
+    var visible =
         allTrips.where((t) {
-            final matchesQuery =
-                query.isEmpty ||
-                t.title.toLowerCase().contains(query) ||
-                t.origin.toLowerCase().contains(query) ||
-                t.destination.toLowerCase().contains(query);
+          final q =
+              query.isEmpty ||
+              t.title.toLowerCase().contains(query) ||
+              t.origin.toLowerCase().contains(query) ||
+              t.destination.toLowerCase().contains(query);
+          final tg = tag == null || t.tags.contains(tag);
+          return q && tg;
+        }).toList();
 
-            final matchesTag = tag == null || t.tags.contains(tag);
-            return matchesQuery && matchesTag;
-          }).toList()
-          // optional: sort by start date
-          ..sort((a, b) => a.start.compareTo(b.start));
+    // Sort: pinned first, then by start date ascending
+    visible.sort((a, b) {
+      if (a.pinned != b.pinned) return b.pinned ? 1 : -1;
+      return a.start.compareTo(b.start);
+    });
 
     return Scaffold(
       appBar: AppBar(
         title: Image.asset(
-          'assets/logo.png', // <-- add to pubspec
+          'assets/logo.png',
           height: 32,
-          errorBuilder:
-              (_, __, ___) => const Text(
-                'Trips',
-                style: TextStyle(fontWeight: FontWeight.w600),
-              ),
+          errorBuilder: (_, __, ___) => const Text('Trips'),
         ),
       ),
-
       body: Padding(
         padding: const EdgeInsets.all(12),
         child: Column(
           children: [
-            // ---------- search bar ----------
+            // Search
             TextField(
               controller: _searchCtrl,
               decoration: InputDecoration(
@@ -95,6 +88,7 @@ class _TripsPageState extends ConsumerState<TripsPage> {
             ),
             const SizedBox(height: 8),
 
+            // Tag filters
             if (allTags.isNotEmpty)
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
@@ -126,6 +120,7 @@ class _TripsPageState extends ConsumerState<TripsPage> {
               ),
             if (allTags.isNotEmpty) const SizedBox(height: 8),
 
+            // Trip list
             Expanded(
               child:
                   visible.isEmpty
@@ -138,7 +133,6 @@ class _TripsPageState extends ConsumerState<TripsPage> {
           ],
         ),
       ),
-
       floatingActionButton: AdaptiveFab(
         onPressed:
             () => Navigator.push(
