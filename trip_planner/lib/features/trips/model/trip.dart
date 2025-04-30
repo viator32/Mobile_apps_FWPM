@@ -15,6 +15,7 @@ class Trip {
     this.ticketUrl,
     this.photoUrl,
     this.returnTripId,
+    this.attachmentPaths = const [],
     String? id,
   }) : id = id ?? _uuid.v4();
 
@@ -30,4 +31,39 @@ class Trip {
   final String? ticketUrl;
   final String? photoUrl;
   final String? returnTripId;
+
+  /// Paths or names of user-selected files
+  final List<String> attachmentPaths;
+
+  Trip copyWith({
+    String? title,
+    String? origin,
+    String? destination,
+    DateTime? start,
+    DateTime? end,
+    bool? hasReturn,
+    List<String>? tags,
+    String? notes,
+    String? ticketUrl,
+    String? photoUrl,
+    String? returnTripId,
+    List<String>? attachmentPaths,
+    String? id,
+  }) {
+    return Trip(
+      title: title ?? this.title,
+      origin: origin ?? this.origin,
+      destination: destination ?? this.destination,
+      start: start ?? this.start,
+      end: end ?? this.end,
+      hasReturn: hasReturn ?? this.hasReturn,
+      tags: tags ?? List.from(this.tags),
+      notes: notes ?? this.notes,
+      ticketUrl: ticketUrl ?? this.ticketUrl,
+      photoUrl: photoUrl ?? this.photoUrl,
+      returnTripId: returnTripId ?? this.returnTripId,
+      attachmentPaths: attachmentPaths ?? List.from(this.attachmentPaths),
+      id: id ?? this.id,
+    );
+  }
 }
