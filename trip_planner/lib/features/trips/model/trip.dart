@@ -1,4 +1,6 @@
+// lib/model/trip.dart
 import 'package:uuid/uuid.dart';
+import 'dart:convert';
 
 const _uuid = Uuid();
 
@@ -16,7 +18,7 @@ class Trip {
     this.photoUrl,
     this.returnTripId,
     this.attachmentPaths = const [],
-    this.pinned = false, // <<< new field
+    this.pinned = false,
     String? id,
   }) : id = id ?? _uuid.v4();
 
@@ -67,5 +69,48 @@ class Trip {
       pinned: pinned ?? this.pinned,
       id: id ?? this.id,
     );
+  }
+
+  factory Trip.fromMap(Map<String, dynamic> map) {
+    return Trip(
+      id: map['id'] as String,
+      title: map['title'] as String,
+      origin: map['origin'] as String,
+      destination: map['destination'] as String,
+      start: DateTime.fromMillisecondsSinceEpoch(map['start'] as int),
+      end:
+          map['end'] != null
+              ? DateTime.fromMillisecondsSinceEpoch(map['end'] as int)
+              : null,
+      hasReturn: (map['hasReturn'] as int) == 1,
+      tags: (jsonDecode(map['tags'] as String) as List<dynamic>).cast<String>(),
+      notes: map['notes'] as String,
+      ticketUrl: map['ticketUrl'] as String?,
+      photoUrl: map['photoUrl'] as String?,
+      returnTripId: map['returnTripId'] as String?,
+      attachmentPaths:
+          (jsonDecode(map['attachmentPaths'] as String) as List<dynamic>)
+              .cast<String>(),
+      pinned: (map['pinned'] as int) == 1,
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'title': title,
+      'origin': origin,
+      'destination': destination,
+      'start': start.millisecondsSinceEpoch,
+      'end': end?.millisecondsSinceEpoch,
+      'hasReturn': hasReturn ? 1 : 0,
+      'returnTripId': returnTripId,
+      'tags': jsonEncode(tags),
+      'notes': notes,
+      'ticketUrl': ticketUrl,
+      'photoUrl': photoUrl,
+      'attachmentPaths': jsonEncode(attachmentPaths),
+      'pinned': pinned ? 1 : 0,
+    };
   }
 }

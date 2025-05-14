@@ -1,99 +1,94 @@
+// lib/repos/trip_repository.dart
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../model/trip.dart';
+import '../../../services/database_service.dart';
+import '../../../providers.dart';
 
 class TripRepository extends StateNotifier<List<Trip>> {
-  TripRepository() : super(const []);
+  final DatabaseService _db;
 
-  void add(Trip trip) => state = [...state, trip];
+  TripRepository(this._db) : super([]) {
+    _loadFromDb();
+  }
 
-  Trip? byId(String id) {
-    try {
-      return state.firstWhere((t) => t.id == id);
-    } catch (_) {
-      return null;
+  Future<void> _loadFromDb() async {
+    final rows = await _db.getAllTrips();
+    state =
+        rows.map((r) => Trip.fromMap(Map<String, dynamic>.from(r))).toList();
+  }
+
+  Future<void> add(Trip trip) async {
+    await _db.insertTrip(trip.toMap());
+    state = [...state, trip];
+  }
+
+  Future<void> update(Trip updated) async {
+    await _db.updateTrip(updated.toMap());
+    state = state.map((t) => t.id == updated.id ? updated : t).toList();
+  }
+
+  Future<void> remove(String id) async {
+    // 1) delete the trip & its baggage
+    await _db.deleteTrip(id);
+
+    // 2) fix any trips that pointed at it as a return
+    final newState = <Trip>[];
+    for (final t in state) {
+      if (t.id == id) continue;
+      if (t.returnTripId == id) {
+        final fixed = t.copyWith(hasReturn: false, returnTripId: null);
+        await _db.updateTrip(fixed.toMap());
+        newState.add(fixed);
+      } else {
+        newState.add(t);
+      }
     }
+    state = newState;
   }
 
-  void update(Trip updated) =>
-      state = [for (final t in state) (t.id == updated.id) ? updated : t];
-
-  void remove(String id) {
-    var next = state.where((t) => t.id != id).toList();
-
-    next =
-        next
-            .map(
-              (t) =>
-                  t.returnTripId == id
-                      ? Trip(
-                        title: t.title,
-                        origin: t.origin,
-                        destination: t.destination,
-                        start: t.start,
-                        end: t.end,
-                        hasReturn: false,
-                        tags: List<String>.from(t.tags),
-                        notes: t.notes,
-                        ticketUrl: t.ticketUrl,
-                        photoUrl: t.photoUrl,
-                        id: t.id,
-                      )
-                      : t,
-            )
-            .toList();
-
-    state = next;
-  }
-
-  void addWithReturn(Trip trip) {
+  Future<void> addWithReturn(Trip trip) async {
     if (!trip.hasReturn || trip.end == null) {
-      add(trip);
+      await add(trip);
       return;
     }
 
     final forward = trip;
 
     final back = Trip(
-      title: '${trip.title} (Return)',
-      origin: trip.destination,
-      destination: trip.origin,
-      start: trip.end!,
+      title: '${forward.title} (Return)',
+      origin: forward.destination,
+      destination: forward.origin,
+      start: forward.end!,
       hasReturn: false,
-      tags: List<String>.from(trip.tags),
-      notes: trip.notes,
-      ticketUrl: trip.ticketUrl,
-      photoUrl: trip.photoUrl,
-      returnTripId: forward.id,
-    );
-
-    final forwardLinked = Trip(
-      title: forward.title,
-      origin: forward.origin,
-      destination: forward.destination,
-      start: forward.start,
-      end: forward.end,
-      hasReturn: true,
-      tags: List<String>.from(forward.tags),
+      tags: List.from(forward.tags),
       notes: forward.notes,
       ticketUrl: forward.ticketUrl,
       photoUrl: forward.photoUrl,
-      returnTripId: back.id,
-      id: forward.id, // keep original ID
+      returnTripId: forward.id,
+      attachmentPaths: List.from(forward.attachmentPaths),
     );
 
+    final forwardLinked = forward.copyWith(
+      hasReturn: true,
+      returnTripId: back.id,
+    );
+
+    await _db.insertTrip(forwardLinked.toMap());
+    await _db.insertTrip(back.toMap());
     state = [...state, forwardLinked, back];
   }
 
-  /// Flip the `pinned` status of a trip.
-  void togglePin(String id) {
-    state =
-        state.map((t) {
-          if (t.id != id) return t;
-          return t.copyWith(pinned: !t.pinned);
-        }).toList();
+  Future<void> togglePin(String id) async {
+    final t = state.firstWhere((t) => t.id == id);
+    final updated = t.copyWith(pinned: !t.pinned);
+    await _db.updateTrip(updated.toMap());
+    state = state.map((t) => t.id == id ? updated : t).toList();
   }
 }
 
-final tripRepoProvider = StateNotifierProvider<TripRepository, List<Trip>>(
-  (ref) => TripRepository(),
-);
+final tripRepoProvider = StateNotifierProvider<TripRepository, List<Trip>>((
+  ref,
+) {
+  final db = ref.watch(databaseServiceProvider);
+  return TripRepository(db);
+});
