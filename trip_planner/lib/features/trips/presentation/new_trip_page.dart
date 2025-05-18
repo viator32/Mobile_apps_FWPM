@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:http/http.dart' as http;
-import '../data/trip_repository.dart';
+
+import '../../../providers.dart';
+
 import '../model/trip.dart';
 
 class NewTripPage extends ConsumerStatefulWidget {
@@ -39,13 +41,14 @@ class _NewTripPageState extends ConsumerState<NewTripPage> {
   Future<List<String>> _fetchCities(String pattern) async {
     if (pattern.length < 2) return const [];
     final uri = Uri.parse(
-      'https://geocoding-api.open-meteo.com/v1/search?name=$pattern&count=10&language=en',
+      'https://geocoding-api.open-meteo.com/v1/search?'
+      'name=$pattern&count=10&language=en',
     );
     try {
       final res = await http.get(uri);
       if (res.statusCode != 200) return const [];
-      final json = jsonDecode(res.body) as Map<String, dynamic>;
-      final results = (json['results'] ?? []) as List<dynamic>;
+      final jsonBody = jsonDecode(res.body) as Map<String, dynamic>;
+      final results = (jsonBody['results'] ?? []) as List<dynamic>;
       return results.map((e) => e['name'] as String).toSet().toList();
     } catch (_) {
       return const [];
@@ -67,7 +70,7 @@ class _NewTripPageState extends ConsumerState<NewTripPage> {
   }
 
   /* ---------- SAVE ---------- */
-  void _save() {
+  Future<void> _save() async {
     if (_formKey.currentState!.validate() && _start != null) {
       final trip = Trip(
         title: _titleCtrl.text.trim(),
@@ -79,8 +82,10 @@ class _NewTripPageState extends ConsumerState<NewTripPage> {
         tags: _selectedTags.toList(),
         notes: _notesCtrl.text,
       );
-      ref.read(tripRepoProvider.notifier).addWithReturn(trip);
-      Navigator.pop(context);
+
+      await ref.read(tripRepoProvider.notifier).addWithReturn(trip);
+
+      if (mounted) Navigator.pop(context);
     }
   }
 
@@ -183,7 +188,6 @@ class _NewTripPageState extends ConsumerState<NewTripPage> {
               ),
               const SizedBox(height: 12),
 
-              // ---------- TAG PICKER ----------
               const Text('Tags'),
               const SizedBox(height: 4),
               Wrap(

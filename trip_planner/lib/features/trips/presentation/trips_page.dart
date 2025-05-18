@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../../../providers.dart';
+
 import '../../../shared/widgets/adaptive_fab.dart';
-import '../data/trip_repository.dart';
 import '../model/trip.dart';
 import 'trip_card.dart';
 import 'new_trip_page.dart';
@@ -36,13 +38,13 @@ class _TripsPageState extends ConsumerState<TripsPage> {
     // Filter
     var visible =
         allTrips.where((t) {
-          final q =
+          final matchesQuery =
               query.isEmpty ||
               t.title.toLowerCase().contains(query) ||
               t.origin.toLowerCase().contains(query) ||
               t.destination.toLowerCase().contains(query);
-          final tg = tag == null || t.tags.contains(tag);
-          return q && tg;
+          final matchesTag = tag == null || t.tags.contains(tag);
+          return matchesQuery && matchesTag;
         }).toList();
 
     // Sort: pinned first, then by start date ascending

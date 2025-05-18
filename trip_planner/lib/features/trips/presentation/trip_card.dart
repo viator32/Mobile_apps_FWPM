@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import '../data/trip_repository.dart';
+
+import '../../../providers.dart';
+
 import '../model/trip.dart';
 import 'trip_details_page.dart';
 

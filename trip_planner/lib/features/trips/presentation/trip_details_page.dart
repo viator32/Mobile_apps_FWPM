@@ -6,8 +6,9 @@ import 'package:file_picker/file_picker.dart';
 import 'package:path/path.dart' as p;
 import 'package:open_file/open_file.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import '../../../providers.dart';
 import '../../baggage/presentation/baggage_page.dart';
-import '../data/trip_repository.dart';
 import '../model/trip.dart';
 
 class TripDetailsPage extends ConsumerWidget {
@@ -18,7 +19,7 @@ class TripDetailsPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final trip = ref.watch(tripRepoProvider).firstWhere((t) => t.id == tripId);
     final df = DateFormat.yMMMd();
-    final diff = trip.start.difference(DateTime.now()).inDays;
+    final daysUntil = trip.start.difference(DateTime.now()).inDays;
     final cs = Theme.of(context).colorScheme;
 
     void _removeTrip() {
@@ -30,10 +31,8 @@ class TripDetailsPage extends ConsumerWidget {
       final result = await FilePicker.platform.pickFiles();
       if (result != null && result.files.isNotEmpty) {
         final file = result.files.single;
-        // on Web, file.path is null; use name instead
         final pathOrName = file.path ?? file.name;
-        final updated = List<String>.from(trip.attachmentPaths)
-          ..add(pathOrName);
+        final updated = [...trip.attachmentPaths, pathOrName];
         ref
             .read(tripRepoProvider.notifier)
             .update(trip.copyWith(attachmentPaths: updated));
@@ -42,9 +41,8 @@ class TripDetailsPage extends ConsumerWidget {
 
     Future<void> _openAttachment(String path) async {
       if (kIsWeb) {
-        // On Web attachments are just names; no-op or implement download
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Cannot open local files on Web.')),
+          const SnackBar(content: Text('Cannot open local files on Web.')),
         );
       } else {
         await OpenFile.open(path);
@@ -65,7 +63,7 @@ class TripDetailsPage extends ConsumerWidget {
           IconButton(
             icon: const Icon(Icons.edit),
             onPressed: () {
-              /* TODO */
+              // TODO: navigate to edit page
             },
           ),
           IconButton(icon: const Icon(Icons.delete), onPressed: _removeTrip),
@@ -85,8 +83,8 @@ class TripDetailsPage extends ConsumerWidget {
               style: Theme.of(context).textTheme.titleMedium,
             ),
             subtitle: Text(
-              diff >= 0 && diff < 14
-                  ? 'Trip in $diff day${diff == 1 ? '' : 's'}'
+              daysUntil >= 0 && daysUntil < 14
+                  ? 'Trip in $daysUntil day${daysUntil == 1 ? '' : 's'}'
                   : df.format(trip.start) +
                       (trip.end != null ? ' – ${df.format(trip.end!)}' : ''),
             ),
@@ -108,8 +106,7 @@ class TripDetailsPage extends ConsumerWidget {
                   trailing: IconButton(
                     icon: const Icon(Icons.delete_forever),
                     onPressed: () {
-                      final updated = List<String>.from(trip.attachmentPaths)
-                        ..remove(path);
+                      final updated = [...trip.attachmentPaths]..remove(path);
                       ref
                           .read(tripRepoProvider.notifier)
                           .update(trip.copyWith(attachmentPaths: updated));
@@ -126,7 +123,7 @@ class TripDetailsPage extends ConsumerWidget {
           ),
           const SizedBox(height: 16),
 
-          // Photo / Ticket URL
+          // Photo and ticket
           if (trip.photoUrl != null)
             ClipRRect(
               borderRadius: BorderRadius.circular(16),

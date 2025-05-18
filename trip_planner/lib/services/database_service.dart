@@ -4,7 +4,7 @@ import 'package:path/path.dart';
 
 class DatabaseService {
   static const _dbName = 'app.db';
-  static const _dbVersion = 1;
+  static const _dbVersion = 2; // ⬆ bumped from 1 to 2
   static const tripsTable = 'trips';
   static const baggageTable = 'baggage_items';
 
@@ -14,10 +14,16 @@ class DatabaseService {
     if (_db != null) return _db!;
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, _dbName);
-    _db = await openDatabase(path, version: _dbVersion, onCreate: _onCreate);
+    _db = await openDatabase(
+      path,
+      version: _dbVersion,
+      onCreate: _onCreate,
+      onUpgrade: _onUpgrade, // ← new
+    );
     return _db!;
   }
 
+  // Called only when creating a brand-new database
   Future _onCreate(Database db, int version) async {
     await db.execute('''
       CREATE TABLE $tripsTable (
@@ -33,6 +39,7 @@ class DatabaseService {
         notes TEXT,
         ticketUrl TEXT,
         photoUrl TEXT,
+        attachmentPaths TEXT,   -- new column
         pinned INTEGER
       )
     ''');
@@ -46,6 +53,18 @@ class DatabaseService {
         position INTEGER
       )
     ''');
+  }
+
+  // Called when opening a database with version < _dbVersion
+  Future _onUpgrade(Database db, int oldVersion, int newVersion) async {
+    if (oldVersion < 2) {
+      // Add the new attachmentPaths column
+      await db.execute('''
+        ALTER TABLE $tripsTable ADD COLUMN attachmentPaths TEXT;
+      ''');
+    }
+    // Future migrations would go here:
+    // if (oldVersion < 3) { ... }
   }
 
   // TRIPS CRUD
@@ -67,7 +86,7 @@ class DatabaseService {
   Future<void> deleteTrip(String id) async {
     final db = await database;
     await db.delete(tripsTable, where: 'id = ?', whereArgs: [id]);
-    // you may also want to cascade-delete baggage_items:
+    // cascade-delete baggage_items
     await db.delete(baggageTable, where: 'tripId = ?', whereArgs: [id]);
   }
 
