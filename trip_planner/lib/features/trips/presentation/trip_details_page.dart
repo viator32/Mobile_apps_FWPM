@@ -26,7 +26,7 @@ class _TripDetailsPageState extends ConsumerState<TripDetailsPage> {
   late TextEditingController _originCtrl;
   late TextEditingController _destCtrl;
   late TextEditingController _notesCtrl;
-  bool _hasReturn = false;
+  late bool _hasReturn;
   DateTime? _start, _end;
   Set<String> _selectedTags = {};
 
@@ -71,18 +71,15 @@ class _TripDetailsPageState extends ConsumerState<TripDetailsPage> {
 
   Future<void> _saveEdit(Trip trip) async {
     if (!_formKey.currentState!.validate() || _start == null) return;
-
     final updated = trip.copyWith(
       title: _titleCtrl.text.trim(),
       origin: _originCtrl.text.trim(),
       destination: _destCtrl.text.trim(),
       start: _start!,
-      end: _hasReturn ? _end : null,
-      hasReturn: _hasReturn,
+      // leave end & hasReturn untouched
       tags: _selectedTags.toList(),
       notes: _notesCtrl.text.trim(),
     );
-
     await ref.read(tripRepoProvider.notifier).update(updated);
     setState(() => _isEditing = false);
   }
@@ -117,22 +114,15 @@ class _TripDetailsPageState extends ConsumerState<TripDetailsPage> {
     }
   }
 
-  Future<void> _pickDate({required bool isStart}) async {
+  Future<void> _pickDate() async {
     final now = DateTime.now();
     final picked = await showDatePicker(
       context: context,
       firstDate: now.subtract(const Duration(days: 365)),
       lastDate: now.add(const Duration(days: 365 * 5)),
-      initialDate: isStart ? (_start ?? now) : (_end ?? now),
+      initialDate: _start ?? now,
     );
-    if (picked != null) {
-      setState(() {
-        if (isStart)
-          _start = picked;
-        else
-          _end = picked;
-      });
-    }
+    if (picked != null) setState(() => _start = picked);
   }
 
   Future<void> _addAttachment(Trip trip) async {
@@ -204,7 +194,7 @@ class _TripDetailsPageState extends ConsumerState<TripDetailsPage> {
                   key: _formKey,
                   child: ListView(
                     children: [
-                      // Title
+                      // Trip name
                       TextFormField(
                         controller: _titleCtrl,
                         decoration: const InputDecoration(
@@ -219,7 +209,7 @@ class _TripDetailsPageState extends ConsumerState<TripDetailsPage> {
                       ),
                       const SizedBox(height: 12),
 
-                      // Origin & Destination
+                      // Origin & destination
                       TextFormField(
                         controller: _originCtrl,
                         decoration: const InputDecoration(
@@ -247,39 +237,14 @@ class _TripDetailsPageState extends ConsumerState<TripDetailsPage> {
                       ),
                       const SizedBox(height: 12),
 
-                      // Dates
-                      Row(
-                        children: [
-                          Expanded(
-                            child: OutlinedButton(
-                              onPressed: () => _pickDate(isStart: true),
-                              child: Text(
-                                _start == null
-                                    ? 'Pick start date'
-                                    : df.format(_start!),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          Expanded(
-                            child: OutlinedButton(
-                              onPressed:
-                                  _hasReturn
-                                      ? () => _pickDate(isStart: false)
-                                      : null,
-                              child: Text(
-                                _end == null
-                                    ? 'Pick return date'
-                                    : df.format(_end!),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      SwitchListTile(
-                        title: const Text('Has return trip'),
-                        value: _hasReturn,
-                        onChanged: (v) => setState(() => _hasReturn = v),
+                      // Start date only
+                      OutlinedButton(
+                        onPressed: _pickDate,
+                        child: Text(
+                          _start == null
+                              ? 'Pick start date'
+                              : df.format(_start!),
+                        ),
                       ),
                       const SizedBox(height: 12),
 
@@ -323,7 +288,7 @@ class _TripDetailsPageState extends ConsumerState<TripDetailsPage> {
               : ListView(
                 padding: const EdgeInsets.all(16),
                 children: [
-                  // Route & Date
+                  // Route & date
                   ListTile(
                     leading: CircleAvatar(
                       backgroundColor: cs.primaryContainer,
@@ -382,7 +347,7 @@ class _TripDetailsPageState extends ConsumerState<TripDetailsPage> {
                   ),
                   const SizedBox(height: 16),
 
-                  // Photo & Ticket
+                  // Photo & ticket
                   if (trip.photoUrl != null)
                     ClipRRect(
                       borderRadius: BorderRadius.circular(16),

@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../providers.dart';
 
 import '../../../shared/widgets/adaptive_fab.dart';
-import '../model/trip.dart';
 import 'trip_card.dart';
 import 'new_trip_page.dart';
 

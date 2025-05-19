@@ -79,7 +79,6 @@ class _BaggagePageState extends ConsumerState<BaggagePage> {
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
                   const SizedBox(height: 8),
-                  // Scrollable list of defaults
                   Expanded(
                     child: ListView.builder(
                       itemCount: BaggagePage._defaultItems.length,
@@ -140,35 +139,6 @@ class _BaggagePageState extends ConsumerState<BaggagePage> {
     );
   }
 
-  Future<void> _importDefaults() async {
-    final ok = await showDialog<bool>(
-      context: context,
-      builder:
-          (ctx) => AlertDialog(
-            title: const Text('Import default packing list?'),
-            content: const Text(
-              'This will add a standard list of common items to your packing list.',
-            ),
-            actions: [
-              TextButton(
-                child: const Text('Cancel'),
-                onPressed: () => Navigator.pop(ctx, false),
-              ),
-              TextButton(
-                child: const Text('Import'),
-                onPressed: () => Navigator.pop(ctx, true),
-              ),
-            ],
-          ),
-    );
-    if (ok == true) {
-      final notifier = ref.read(baggageRepoProvider.notifier);
-      for (final item in BaggagePage._defaultItems) {
-        await notifier.add(widget.tripId, item);
-      }
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final items = ref.watch(baggageRepoProvider)[widget.tripId] ?? [];
@@ -182,13 +152,6 @@ class _BaggagePageState extends ConsumerState<BaggagePage> {
             child: IconButton(
               icon: const Icon(Icons.lightbulb_outline),
               onPressed: _showAdvisor,
-            ),
-          ),
-          Tooltip(
-            message: 'Import Default List',
-            child: IconButton(
-              icon: const Icon(Icons.playlist_add_check),
-              onPressed: _importDefaults,
             ),
           ),
         ],
