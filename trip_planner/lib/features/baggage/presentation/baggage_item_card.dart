@@ -10,7 +10,6 @@ class BaggageItemCard extends ConsumerWidget {
     required this.tripId,
     required this.index,
   });
-
   final BaggageItem item;
   final String tripId;
   final int index;
