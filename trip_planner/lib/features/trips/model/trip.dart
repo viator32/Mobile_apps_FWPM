@@ -1,4 +1,3 @@
-// lib/model/trip.dart
 import 'package:uuid/uuid.dart';
 import 'dart:convert';
 

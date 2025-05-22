@@ -1,4 +1,3 @@
-// lib/repos/trip_repository.dart
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../model/trip.dart';
 import '../../../services/database_service.dart';

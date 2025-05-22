@@ -1,5 +1,3 @@
-// lib/features/baggage/presentation/baggage_page.dart
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -10,7 +8,7 @@ class BaggagePage extends ConsumerStatefulWidget {
   const BaggagePage({required this.tripId, super.key});
   final String tripId;
 
-  // Your “advisor” & default list:
+  //“advisor” & default list:
   static const _defaultItems = [
     'Passport',
     'Tickets',

@@ -1,10 +1,9 @@
-// lib/services/database_service.dart
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
 class DatabaseService {
   static const _dbName = 'app.db';
-  static const _dbVersion = 2; // ⬆ bumped from 1 to 2
+  static const _dbVersion = 2;
   static const tripsTable = 'trips';
   static const baggageTable = 'baggage_items';
 
@@ -18,7 +17,7 @@ class DatabaseService {
       path,
       version: _dbVersion,
       onCreate: _onCreate,
-      onUpgrade: _onUpgrade, // ← new
+      onUpgrade: _onUpgrade,
     );
     return _db!;
   }
@@ -39,7 +38,7 @@ class DatabaseService {
         notes TEXT,
         ticketUrl TEXT,
         photoUrl TEXT,
-        attachmentPaths TEXT,   -- new column
+        attachmentPaths TEXT,  
         pinned INTEGER
       )
     ''');

@@ -17,7 +17,6 @@ class NewTripPage extends ConsumerStatefulWidget {
 class _NewTripPageState extends ConsumerState<NewTripPage> {
   final _formKey = GlobalKey<FormState>();
 
-  // controllers
   final _titleCtrl = TextEditingController();
   final _originCtrl = TextEditingController();
   final _destCtrl = TextEditingController();
@@ -26,7 +25,6 @@ class _NewTripPageState extends ConsumerState<NewTripPage> {
   bool _hasReturn = false;
   DateTime? _start, _end;
 
-  /* ---------- TAGS ---------- */
   static const _defaultTags = [
     'Vacation',
     'Business',
@@ -37,7 +35,6 @@ class _NewTripPageState extends ConsumerState<NewTripPage> {
   ];
   final _selectedTags = <String>{};
 
-  /* ---------- CITY AUTOCOMPLETE ---------- */
   Future<List<String>> _fetchCities(String pattern) async {
     if (pattern.length < 2) return const [];
     final uri = Uri.parse(
@@ -55,7 +52,6 @@ class _NewTripPageState extends ConsumerState<NewTripPage> {
     }
   }
 
-  /* ---------- DATE PICKER ---------- */
   Future<void> _pickDate({required bool isStart}) async {
     final now = DateTime.now();
     final picked = await showDatePicker(
@@ -69,7 +65,6 @@ class _NewTripPageState extends ConsumerState<NewTripPage> {
     }
   }
 
-  /* ---------- SAVE ---------- */
   Future<void> _save() async {
     if (_formKey.currentState!.validate() && _start != null) {
       final trip = Trip(
@@ -98,7 +93,6 @@ class _NewTripPageState extends ConsumerState<NewTripPage> {
     super.dispose();
   }
 
-  /* ---------- CITY FIELD BUILDER ---------- */
   Widget _cityField({
     required TextEditingController controller,
     required String label,
@@ -123,7 +117,6 @@ class _NewTripPageState extends ConsumerState<NewTripPage> {
     );
   }
 
-  /* ---------- BUILD ---------- */
   @override
   Widget build(BuildContext context) {
     return Scaffold(
